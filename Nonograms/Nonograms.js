@@ -191,7 +191,7 @@ function draw() {
 
 function mouseDragged() {
   if (manual) {
-    if (mouseX >= 0 && mouseX <= 500 && mouseY >=0 && mouseY <= 500) {
+    if (mouseX >= 0 && mouseX <= width && mouseY >=0 && mouseY <= width) {
       BOARD[floor(mouseY/distance)][floor(mouseX/distance)] = draggedVar;
     }
   }
@@ -200,7 +200,7 @@ function mouseDragged() {
 function mousePressed() {
   if (manual) {
     if (mouseButton === LEFT) {
-      if (mouseX >= 0 && mouseX <= 500 && mouseY >=0 && mouseY <= 500) {
+      if (mouseX >= 0 && mouseX <= width && mouseY >=0 && mouseY <= width) {
         if (BOARD[floor(mouseY/distance)][floor(mouseX/distance)] == 1) {
           draggedVar = 0;
         } else {
@@ -208,7 +208,7 @@ function mousePressed() {
         }
       }
     } else if (mouseButton === RIGHT) {
-      if (mouseX >= 0 && mouseX <= 500 && mouseY >=0 && mouseY <= 500) {
+      if (mouseX >= 0 && mouseX <= width && mouseY >=0 && mouseY <= width) {
         if (BOARD[floor(mouseY/distance)][floor(mouseX/distance)] == -1) {
           draggedVar = 0;
         } else {
@@ -216,7 +216,7 @@ function mousePressed() {
         }
       }
     }
-    if (mouseX >= 0 && mouseX <= 500 && mouseY >=0 && mouseY <= 500) {
+    if (mouseX >= 0 && mouseX <= width && mouseY >=0 && mouseY <= width) {
       BOARD[floor(mouseY/distance)][floor(mouseX/distance)] = draggedVar;
     }
   }
