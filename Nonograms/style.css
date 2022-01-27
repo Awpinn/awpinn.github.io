@@ -1,0 +1,114 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #ececec;
+}
+
+.header {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0 40px;
+}
+
+h1 {
+  color: black;
+  text-align: left;
+  font-size: 48px;
+  margin: 0.5em 0;
+}
+
+canvas {
+  display: block;
+}
+
+#boardCenter {
+  width: 100%;
+  display:flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+#boardBorder {
+  background-color: white;
+  margin: 0;
+  width: 550px;
+  height: 550px;
+  border:5px solid black;
+  padding: 20px;
+}
+
+#board {
+  background-color: white;
+  display: flex;
+  position:absolute;
+  margin: 0;
+}
+
+#row {
+  position:absolute;
+  top: 150px;
+  height:500px;
+  width:150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#col {
+  position:absolute;
+  left:150px;
+  height:150px;
+  width: 500px;
+  display: flex;
+  flex-direction:row;
+  justify-content: space-around;
+}
+
+#col textarea {
+  width: 15px;
+  height: 146px;
+}
+
+#row textarea {
+  width: 146px;
+  height: 15px;
+}
+
+.p5Canvas {
+  position: absolute;
+  top:150px;
+  left:150px;
+}
+
+.schtuff {
+  background-color: white;
+  display: flex;
+  border:5px solid black;
+  padding: 10px;
+  margin: 0;
+  width:fit-content;
+}
+
+#buttons {
+  display: flex;
+}
+
+#buttons div {
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  margin-bottom: 15px;
+}
+
+.allsliders {
+  display:flex;
+}
+
+.slidecontainer {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
