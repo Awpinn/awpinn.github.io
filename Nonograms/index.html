@@ -12,6 +12,7 @@
   </head>
 
   <body>
+    <p><a href="../../index.html">Return to Main Page</a></p>
     <div class="header">
       <h1>Nonograms AI</h1>
       <div class="schtuff">
@@ -46,7 +47,7 @@
     </div>
     <div id="boardCenter">
       <div id="boardBorder">
-        <div id="board">
+        <div oncontextmenu="return false;" id="board">
             <div id="col"></div>
             <div id="row"></div>
         </div>
@@ -54,9 +55,6 @@
     </div>
     <script src="./Nonograms.js"></script>
     <script>
-      window.oncontextmenu = (e) => {
-        e.preventDefault();
-      }
       var sizeSlider = document.getElementById("sizeRange");
       var sizeOutput = document.getElementById("boardSize");
       var frameSlider = document.getElementById("frameRange");
@@ -94,6 +92,7 @@
         xwidth = parseInt(widthSlider.value);
         widthOutput.innerHTML = "Width: " + widthSlider.value + "px";
         changeWidth();
+        redraw();
       }
 
       function addElements() {

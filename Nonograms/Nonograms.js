@@ -10,14 +10,13 @@ let COLLIST = [];
 let draggedVar = 1;
 let knownBoard = true;
 
-let myCanvas;
-
 let manual = true;
 let done = false;
 let xframerate = 1;
 let xwidth = 500;
 
 function setup() {
+  loop();
   frameRate(xframerate);
   manual = true;
   myCanvas = createCanvas(xwidth, xwidth);
@@ -179,7 +178,7 @@ function draw() {
   }
 
   if (done) {
-    console.log(boardIsValid([...ROWLIST], [...COLLIST]));
+    noLoop();
   }
 
   if (ROWLIST.length != 0){

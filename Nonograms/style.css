@@ -7,7 +7,7 @@ html, body {
 .header {
   display: flex;
   justify-content: space-around;
-  margin: 20px 0 40px;
+  margin: 0 0 40px;
 }
 
 h1 {
