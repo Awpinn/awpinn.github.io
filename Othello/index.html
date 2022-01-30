@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<script src="p5.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<meta charset="utf-8" />
+	</head>
+
+	<body>
+    <a class="hvr-skew-backward" href="../../index.html">Return to Main Page</a>
+		<div id="PlayerOptions">
+			<div id="WhitePlayer">
+				<h2>White Player</h2>
+				<div id="buttons">
+					<form action="" method="post">
+						<div id="selector">
+							<div><input type="radio" name="whitePlayer" value="manual" checked /> Manual Player</div>
+							<div><input type="radio" name="whitePlayer" value="random" /> Random Player</div>
+						</div>
+						<div id="selector">
+							<div id="depth">
+								<input type="radio" name="whitePlayer" value="whiteab" id="whiteab" /> Alpha-Beta Player
+								<input type="range" min="1" max="6" value="5" class="slider" style="display: none" id="whiteabdepth" />
+								<p style="display: none" id="whiteaboutput"></p>
+							</div>
+							<div id="depth">
+								<input type="radio" name="whitePlayer" value="whiteminmax" id="whiteminmax" /> Min-Max Player
+								<input type="range" min="1" max="6" value="5" class="slider" style="display: none" id="whiteminmaxdepth" />
+								<p style="display: none" id="whiteminmaxoutput"></p>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div id="BlackPlayer">
+				<h2>Black Player</h2>
+				<div id="buttons">
+					<form action="" method="post">
+						<div id="selector">
+							<div><input type="radio" name="blackPlayer" value="manual" checked /> Manual Player</div>
+							<div><input type="radio" name="blackPlayer" value="random" /> Random Player</div>
+						</div>
+						<div id="selector">
+							<div id="depth">
+								<input type="radio" name="blackPlayer" value="blackab" id="blackab" /> Alpha-Beta Player
+								<input type="range" min="1" max="6" value="5" class="slider" style="display: none" id="blackabdepth" />
+								<p style="display: none" id="blackaboutput"></p>
+							</div>
+							<div id="depth">
+								<input type="radio" name="blackPlayer" value="blackminmax" id="blackminmax" /> Min-Max Player
+								<input type="range" min="1" max="6" value="5" class="slider" style="display: none" id="blackminmaxdepth" />
+								<p style="display: none" id="blackminmaxoutput"></p>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div id="sliders">
+				<h2>Board Settings</h2>
+				<div id="inputs">
+					<div id="sizeInput">
+						<h3>Board Size</h3>
+						<input type="range" min="4" max="16" value="8" step="2" class="slider" id="size" />
+						<p id="sizeOutput"></p>
+					</div>
+					<div id="widthInput">
+						<h3>Cell Width</h3>
+						<input type="range" min="25" max="100" value="50" step="5" class="slider" id="width" />
+						<p id="widthOutput"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="submitbox">
+			<button id="submit">Submit</button>
+		</div>
+		<div id="main">
+			<div id="about">
+        <h2 style="text-align: center; text-decoration: underline;">About Othello</h2>
+				<p>
+					Othello is played on an eight-by-eight board, taking a maximum of 60 turns (64 board spaces - the 4 spaces occupied at the start of the game). 60
+					turns is also the most common number of turns for a game. This is much too large of a problem space to fully evaluate, so finding a heuristic that can
+					give a good estimate of whether a board is good or not is very important, but for Othello, where the game can be heavily influenced in the last few
+					turns, this proved to be a difficult task. We found that there were three main things to look at when evaluating a board. The most obvious one is who
+					has the most pieces in their color on the board. However, this matters most at the end of the game and only very little at the beginning and middle,
+					as then it is much more important to get a good position than to have more pieces on the board. To look at position, we checked to see if a player was
+					in the corners and which player would have more moves. Holding the corners is incredibly important, as a corner piece can never be flipped, and
+					therefore can create walls of unflappable pieces, creating a domino effect. Forcing the opponent to have less moves is good for the algorithm to
+					determine the best move, and having more choices to pick from for your own move is also very good.
+				</p>
+			</div>
+			<div>
+				<main></main>
+			</div>
+			<div id="about">
+        <h2 style="text-align: center; text-decoration: underline;">About The Algorithms</h2>
+				<h3>Random Player:</h3>
+        <p>Pretty self explainitory, but the random player just looks at all available valid moves and chooses a random one out of those to make. It might be a good move, it might be a terrible move, this algorithm has no way of judging.</p>
+        <h3>Min-Max Player:</h3>
+        <p>The min-max function looks at every single possible move, looks at all moves that the opponent could make given that move, and so on until it reaches a maximum depth which uses a heuristic to look at the board and evaluate it given a lot of factors, described in the box to the left. It then goes back up the chains and chooses the best move.</p>
+        <h3>Alpha-Beta Player:</h3>
+        <p>Alpha-Beta is a form of the min-max function, only whenever it realizes that the opponent could force the player into a bad move, or it knows other moves are better, it stops looking down that path so that it can run faster. Both the min-max function and the alpha-beta pruning algorithms will give the same answer, the best move possible, alpha-beta just enables it to go faster.</p>
+        <h3>MonteCarlo Player:</h3>
+        <p>This is an algorithm that continually samples a bunch of random moves, playing them to completion and marking the results, and then chooses which move had the best win-percentage. Theoretically, if it was left to run forever, it would sample the entire problem space and 100% know what the best move is, but for games that have less strategy for the end-game, it is a very efficient algorithm.</p>
+			</div>
+		</div>
+		<script src="lodash.js"></script>
+		<script src="board.js"></script>
+		<script src="MonteCarloNode.js"></script>
+		<script src="heuristics.js"></script>
+		<script src="player.js"></script>
+		<script src="game.js"></script>
+		<script src="test.js"></script>
+		<script>
+			var sizeslider = document.getElementById("size");
+			var sizeoutput = document.getElementById("sizeOutput");
+			sizeoutput.innerHTML = sizeslider.value + " x " + sizeslider.value;
+			size = parseInt(sizeslider.value);
+			sizeslider.oninput = function () {
+				sizeoutput.innerHTML = this.value + " x " + this.value;
+			};
+			var widthslider = document.getElementById("width");
+			var widthoutput = document.getElementById("widthOutput");
+			widthoutput.innerHTML = widthslider.value + " px";
+			width = parseInt(widthslider.value);
+			widthslider.oninput = function () {
+				widthoutput.innerHTML = this.value + " px";
+			};
+			document.getElementById("WhitePlayer").addEventListener("change", function (e) {
+				let target = e.target;
+				switch (target.id) {
+					case "whiteabdepth":
+					case "whiteab":
+						document.getElementById("whiteabdepth").style.display = "block";
+						document.getElementById("whiteminmaxdepth").style.display = "none";
+						document.getElementById("whiteaboutput").style.display = "block";
+						document.getElementById("whiteminmaxoutput").style.display = "none";
+						break;
+					case "whiteminmaxdepth":
+					case "whiteminmax":
+						document.getElementById("whiteabdepth").style.display = "none";
+						document.getElementById("whiteminmaxdepth").style.display = "block";
+						document.getElementById("whiteaboutput").style.display = "none";
+						document.getElementById("whiteminmaxoutput").style.display = "block";
+						break;
+					default:
+						document.getElementById("whiteabdepth").style.display = "none";
+						document.getElementById("whiteminmaxdepth").style.display = "none";
+						document.getElementById("whiteaboutput").style.display = "none";
+						document.getElementById("whiteminmaxoutput").style.display = "none";
+						break;
+				}
+			});
+			document.getElementById("BlackPlayer").addEventListener("change", function (e) {
+				let target = e.target;
+				switch (target.id) {
+					case "blackab":
+					case "blackabdepth":
+						document.getElementById("blackabdepth").style.display = "block";
+						document.getElementById("blackminmaxdepth").style.display = "none";
+						document.getElementById("blackaboutput").style.display = "block";
+						document.getElementById("blackminmaxoutput").style.display = "none";
+						break;
+					case "blackminmax":
+					case "blackminmaxdepth":
+						document.getElementById("blackabdepth").style.display = "none";
+						document.getElementById("blackminmaxdepth").style.display = "block";
+						document.getElementById("blackaboutput").style.display = "none";
+						document.getElementById("blackminmaxoutput").style.display = "block";
+						break;
+					default:
+						document.getElementById("blackabdepth").style.display = "none";
+						document.getElementById("blackminmaxdepth").style.display = "none";
+						document.getElementById("blackaboutput").style.display = "none";
+						document.getElementById("blackminmaxoutput").style.display = "none";
+						break;
+				}
+			});
+			var btn = document.querySelector("#submit");
+			var whiteButtons = document.querySelectorAll('input[name="whitePlayer"]');
+			var blackButtons = document.querySelectorAll('input[name="blackPlayer"]');
+			btn.addEventListener("click", () => {
+				let whitePlayer;
+				for (const radioButton of whiteButtons) {
+					if (radioButton.checked) {
+						whitePlayer = radioButton.value;
+						break;
+					}
+				}
+				if (whitePlayer == "manual") {
+					white_player = new ManualPlayer();
+				} else if (whitePlayer == "random") {
+					white_player = new RandomPlayer();
+				} else if (whitePlayer == "whiteab") {
+					white_player = new PlayerAB(parseInt(document.getElementById("whiteabdepth").value));
+				} else if (whitePlayer == "whiteminmax") {
+					white_player = new PlayerAB(parseInt(document.getElementById("whiteminmaxdepth").value));
+				}
+				let blackPlayer;
+				for (const radioButton of blackButtons) {
+					if (radioButton.checked) {
+						blackPlayer = radioButton.value;
+						console.log(blackPlayer);
+						break;
+					}
+				}
+				if (blackPlayer == "manual") {
+					black_player = new ManualPlayer();
+				} else if (blackPlayer == "random") {
+					black_player = new RandomPlayer();
+				} else if (blackPlayer == "blackab") {
+					black_player = new PlayerAB(parseInt(document.getElementById("blackabdepth").value));
+				} else if (blackPlayer == "blackminmax") {
+					black_player = new PlayerAB(parseInt(document.getElementById("blackminmaxdepth").value));
+				}
+				width = parseInt(widthslider.value);
+				size = parseInt(sizeslider.value);
+				setup();
+			});
+			var blackABSlider = document.getElementById("blackabdepth");
+			var blackABOutput = document.getElementById("blackaboutput");
+			blackABOutput.innerHTML = "Depth: " + blackABSlider.value;
+			var blackMinMaxSlider = document.getElementById("blackminmaxdepth");
+			var blackMinMaxOutput = document.getElementById("blackminmaxoutput");
+			blackMinMaxOutput.innerHTML = "Depth: " + blackABSlider.value;
+			var whiteABSlider = document.getElementById("whiteabdepth");
+			var whiteABOutput = document.getElementById("whiteaboutput");
+			whiteABOutput.innerHTML = "Depth: " + blackABSlider.value;
+			var whiteMinMaxSlider = document.getElementById("whiteminmaxdepth");
+			var whiteMinMaxOutput = document.getElementById("whiteminmaxoutput");
+			whiteMinMaxOutput.innerHTML = "Depth: " + blackABSlider.value;
+			blackABSlider.oninput = function () {
+				blackABOutput.innerHTML = "Depth: " + blackABSlider.value;
+			};
+			blackMinMaxSlider.oninput = function () {
+				blackMinMaxOutput.innerHTML = "Depth: " + blackMinMaxSlider.value;
+			};
+			whiteABSlider.oninput = function () {
+				whiteABOutput.innerHTML = "Depth: " + whiteABSlider.value;
+			};
+			whiteMinMaxSlider.oninput = function () {
+				whiteMinMaxOutput.innerHTML = "Depth: " + whiteMinMaxSlider.value;
+			};
+		</script>
+	</body>
+</html>

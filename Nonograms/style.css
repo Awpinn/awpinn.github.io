@@ -6,15 +6,16 @@ html, body {
 
 .header {
   display: flex;
-  justify-content: space-around;
-  margin: 0 0 40px;
+  justify-content: space-between;
+  margin: 20px 0 40px;
 }
 
 h1 {
   color: black;
   text-align: left;
   font-size: 48px;
-  margin: 0.5em 0;
+  margin: 10px 0 0 0;
+  text-decoration: underline;
 }
 
 canvas {
@@ -85,8 +86,12 @@ canvas {
   display: flex;
   border:5px solid black;
   padding: 10px;
-  margin: 0;
+  margin: 0 40px 0 0 ;
   width:fit-content;
+}
+
+.header a {
+  align-self:flex-start;
 }
 
 #buttons {
@@ -111,4 +116,31 @@ button {
   display:flex;
   flex-direction: column;
   align-items: center;
+}
+
+.hvr-skew-backward {
+  margin: 10px 20px;
+  padding: 10px 20px;
+  color: white;
+  background-color: dimgray;
+  text-decoration: none;
+}
+
+/* Skew Backward */
+.hvr-skew-backward {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transform-origin: 0 100%;
+  transform-origin: 0 100%;
+}
+.hvr-skew-backward:hover, .hvr-skew-backward:focus, .hvr-skew-backward:active {
+  -webkit-transform: skew(10deg);
+  transform: skew(10deg);
 }
