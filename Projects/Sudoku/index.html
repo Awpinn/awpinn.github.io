@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="libraries/p5.min.js"></script>
+</head>
+<body>
+    <button id="Generate">Generate Board</button>
+    <script src="lodash.js"></script>
+    <script src="sudoku.js"></script>  
+    <script>
+        var btn = document.querySelector("#Generate");
+        btn.addEventListener("click", () => {
+            board = Array(size).fill().map(() => Array(size).fill(0));
+            finalBoard = Array(size).fill().map(() => Array(size).fill(0));
+            generateBoard(finalBoard);
+            board = _.cloneDeep(finalBoard);
+            removeFromBoard(board);
+            draw();
+        });
+    </script>  
+</body>
+</html>

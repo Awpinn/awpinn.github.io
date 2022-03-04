@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://freshfork.github.io/p5.EasyCam/p5.easycam.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <div class="CanvasElements">
+      <main oncontextmenu="return false;"></main>
+      <div class="allCurrent" id="allCurrent"></div>
+    </div>
+    <div class="shapesBox">
+      <div class="shape1">
+        <label for="m0">m0</label>
+        <input type="number" value = 0 step = 0.1 id="m0">
+        <label for="n10">n10</label>
+        <input type="number" value = 1 step = 0.1 id="n10">
+        <label for="n20">n20</label>
+        <input type="number" value = 1 step = 0.1 id="n20">
+        <label for="n30">n30</label>
+        <input type="number" value = 1 step = 0.1 id="n30">
+        <button id="reset">Reset</button>
+      </div>
+      <div class="shape2">
+        <label for="m1">m1</label>
+        <input type="number" value = 0 step = 0.1 id="m1">
+        <label for="n11">n11</label>
+        <input type="number" value = 1 step = 0.1 id="n11">
+        <label for="n21">n21</label>
+        <input type="number" value = 1 step = 0.1 id="n21">
+        <label for="n31">n31</label>
+        <input type="number" value = 1 step = 0.1 id="n31">
+        <button id="submit">Submit</button>
+      </div>
+    </div>
+    <script src="dnd.js"></script>
+    <script src="loop.js"></script>
+    <script>
+      var clr = document.querySelector("#reset");
+      clr.addEventListener("click", () => {
+        allCurrent.innerHTML = "";
+        shapes = [];
+      });
+      var sbmt = document.querySelector("#submit");
+      sbmt.addEventListener("click", () => {
+          var m0 = parseFloat(document.getElementById("m0").value);
+          var n10 = parseFloat(document.getElementById("n10").value);
+          var n20 = parseFloat(document.getElementById("n20").value);
+          var n30 = parseFloat(document.getElementById("n30").value);
+          var m1 = parseFloat(document.getElementById("m1").value);
+          var n11 = parseFloat(document.getElementById("n11").value);
+          var n21 = parseFloat(document.getElementById("n21").value);
+          var n31 = parseFloat(document.getElementById("n31").value);
+          if (!isNaN(m0) && !isNaN(n10) && !isNaN(n20) && !isNaN(n30) && !isNaN(m1) && !isNaN(n11) && !isNaN(n21) && !isNaN(n31)) {
+              var newShape = new Shape(m0, n10, n20, n30, m1, n11, n21, n31);
+              shapes.push(newShape);
+              shapesCount = 0;
+          }
+          let allCurrent = document.getElementById("allCurrent");
+          allCurrent.innerHTML = "";
+          for (let i = 0; i < shapes.length; i++) {
+            var shapeElement = document.createElement("div");
+            shapeElement.className="box";
+            shapeElement.draggable=true;
+            var node = document.createTextNode(shapes[i].m0 + ", " + shapes[i].n10 + ", " + shapes[i].n20 + ", " + shapes[i].n30 + ", " + shapes[i].m1 + ", " + shapes[i].n11 + ", " + shapes[i].n21 + ", " +shapes[i].n31);
+            shapeElement.appendChild(node);
+            document.getElementById("allCurrent").appendChild(shapeElement);
+          }
+          MakeDraggable();
+      });
+      document.querySelector("#m0").addEventListener('change', updateValue);
+      document.querySelector("#n10").addEventListener('change', updateValue);
+      document.querySelector("#n20").addEventListener('change', updateValue);
+      document.querySelector("#n30").addEventListener('change', updateValue);
+      document.querySelector("#m1").addEventListener('change', updateValue);
+      document.querySelector("#n11").addEventListener('change', updateValue);
+      document.querySelector("#n21").addEventListener('change', updateValue);
+      document.querySelector("#n31").addEventListener('change', updateValue);
+      function updateValue(e) {
+          var m0 = parseFloat(document.getElementById("m0").value);
+          var n10 = parseFloat(document.getElementById("n10").value);
+          var n20 = parseFloat(document.getElementById("n20").value);
+          var n30 = parseFloat(document.getElementById("n30").value);
+          var m1 = parseFloat(document.getElementById("m1").value);
+          var n11 = parseFloat(document.getElementById("n11").value);
+          var n21 = parseFloat(document.getElementById("n21").value);
+          var n31 = parseFloat(document.getElementById("n31").value);
+          if (!isNaN(m0) && !isNaN(n10) && !isNaN(n20) && !isNaN(n30) && !isNaN(m1) && !isNaN(n11) && !isNaN(n21) && !isNaN(n31)) {
+            s = new Shape(m0, n10, n20, n30, m1, n11, n21, n31);
+          }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
+}
+
+.shapesBox {
+  display: flex;
+}  
+
+.shapesBox div {
+  display: flex;
+  flex-direction: column;
+  margin: 15px;
+}
+
+.CanvasElements {
+  display: flex;
+}
+
+main {
+  height: 600px;
+  width: 1200px;
+}
+
+.allCurrent {
+  display: flex;
+  flex-direction: column;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.box {
+  border: 3px solid #666;
+  background-color: #ddd;
+  border-radius: .5em;
+  padding: 10px;
+  cursor: move;
+}
+
+.box.over {
+  border: 3px dotted #666;
+}
+
+[draggable] {
+  user-select: none;
+}

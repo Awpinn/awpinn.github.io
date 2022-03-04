@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nonograms</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script src="libraries/p5.min.js"></script>
+  </head>
+
+  <body>
+    <div class="header">
+      <a class="hvr-skew-backward" href="../../index.html">Return to Main Page</a>
+      <h1>Nonograms AI</h1>
+      <div class="schtuff">
+        <div class="allsliders">
+          <div class="slidecontainer">
+            <input type="range" min="3" max="20" value="10" class="slider" id="sizeRange">
+            <h2 id=boardSize></h2>
+          </div>
+          <div class="slidecontainer">
+            <input type="range" min="1" max="60" value="30" class="slider" id="frameRange">
+            <h2 id=frameRate></h2>
+          </div>
+          <div class="slidecontainer">
+            <input type="range" min="200" max="1000" value="400" step="50" class="slider" id="widthRange">
+            <h2 id=widthSize></h2>
+          </div>
+        </div>
+        <div id="buttons">
+          <div>
+          <button onclick="randomBoard()">Random Board</button>
+          </div>
+          <div>
+          <button onclick="finishBoard()">Finish Board</button>
+          <button onclick="clearBoard()">Clear Board</button>
+          </div>
+          <div>
+          <button onclick="submitRestrictions()">Submit Board Restrictions</button>
+          <button onclick="clearRestrictions()">Clear Restrictions</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="boardCenter">
+      <div id="boardBorder">
+        <div oncontextmenu="return false;" id="board">
+            <div id="col"></div>
+            <div id="row"></div>
+        </div>
+      </div>
+    </div>
+    <script src="./Nonograms.js"></script>
+    <script>
+      var sizeSlider = document.getElementById("sizeRange");
+      var sizeOutput = document.getElementById("boardSize");
+      var frameSlider = document.getElementById("frameRange");
+      var frameOutput = document.getElementById("frameRate");
+      var widthSlider = document.getElementById("widthRange");
+      var widthOutput = document.getElementById("widthSize");
+      frameOutput.innerHTML = frameSlider.value + " fps";
+      xframerate = parseInt(frameSlider.value);
+      sizeOutput.innerHTML = sizeSlider.value + "x" + sizeSlider.value + " Board";
+      widthOutput.innerHTML = "Width: " + widthSlider.value + "px";
+      xwidth = parseInt(widthSlider.value);
+      SIZE = parseInt(sizeSlider.value);
+      BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
+      distance = width/SIZE;
+      addElements();
+      sizeSlider.oninput = function() {
+      sizeOutput.innerHTML = sizeSlider.value + "x" + sizeSlider.value + " Board";
+        SIZE = parseInt(sizeSlider.value);
+        BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
+        COLRESTRICTIONS = [];
+        ROWRESTRICTIONS = [];
+        ROWLIST = [];
+        COLLIST = [];
+        distance = width/SIZE;
+        document.getElementById("col").innerHTML = "";
+        document.getElementById("row").innerHTML = "";
+        addElements();
+      }
+      frameSlider.oninput = function() {
+        xframerate = parseInt(frameSlider.value);
+        frameOutput.innerHTML = frameSlider.value + " fps";
+        setup();
+      }
+      widthSlider.oninput = function() {
+        xwidth = parseInt(widthSlider.value);
+        widthOutput.innerHTML = "Width: " + widthSlider.value + "px";
+        changeWidth();
+        redraw();
+      }
+
+      function addElements() {
+        for (let x = 1; x <= SIZE; x++) {
+          var inputCol = document.createElement('textarea');
+          inputCol.id="col"+x;
+          inputCol.rows="14";
+          inputCol.cols="2";
+          inputCol.wrap="hard";
+          document.getElementById("col").appendChild(inputCol);
+          var inputRow = document.createElement('textarea');
+          inputRow.id="row"+x;
+          inputRow.rows="1";
+          inputRow.cols="14";
+          inputRow.wrap="hard";
+          document.getElementById("row").appendChild(inputRow);
+        }
+      }
+    </script>
+  </body>
+</html>
