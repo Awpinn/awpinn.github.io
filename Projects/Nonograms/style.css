@@ -66,13 +66,13 @@ canvas {
 }
 
 #col textarea {
-  width: 15px;
+  width: 21px;
   height: 146px;
 }
 
 #row textarea {
   width: 146px;
-  height: 15px;
+  height: 21px;
 }
 
 .p5Canvas {
