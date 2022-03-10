@@ -16,6 +16,7 @@
 						<div id="selector">
 							<div><input type="radio" name="whitePlayer" value="manual" checked /> Manual Player</div>
 							<div><input type="radio" name="whitePlayer" value="random" /> Random Player</div>
+							<div><input type="radio" name="whitePlayer" value="MonteCarlo" /> MonteCarlo</div>
 						</div>
 						<div id="selector">
 							<div id="depth">
@@ -39,6 +40,7 @@
 						<div id="selector">
 							<div><input type="radio" name="blackPlayer" value="manual" checked /> Manual Player</div>
 							<div><input type="radio" name="blackPlayer" value="random" /> Random Player</div>
+							<div><input type="radio" name="whitePlayer" value="MonteCarlo" /> MonteCarlo</div>
 						</div>
 						<div id="selector">
 							<div id="depth">
@@ -95,7 +97,7 @@
 			<div id="about">
         <h2 style="text-align: center; text-decoration: underline;">About The Algorithms</h2>
 				<h3>Random Player:</h3>
-        <p>Pretty self explainitory, but the random player just looks at all available valid moves and chooses a random one out of those to make. It might be a good move, it might be a terrible move, this algorithm has no way of judging.</p>
+        <p>Pretty self explanatory, but the random player just looks at all available valid moves and chooses a random one out of those to make. It might be a good move, it might be a terrible move, this algorithm has no way of judging.</p>
         <h3>Min-Max Player:</h3>
         <p>The min-max function looks at every single possible move, looks at all moves that the opponent could make given that move, and so on until it reaches a maximum depth which uses a heuristic to look at the board and evaluate it given a lot of factors, described in the box to the left. It then goes back up the chains and chooses the best move.</p>
         <h3>Alpha-Beta Player:</h3>
@@ -195,6 +197,8 @@
 					white_player = new PlayerAB(parseInt(document.getElementById("whiteabdepth").value));
 				} else if (whitePlayer == "whiteminmax") {
 					white_player = new PlayerAB(parseInt(document.getElementById("whiteminmaxdepth").value));
+				} else if (whitePlayer == "MonteCarlo") {
+					white_player = new MonteCarlo();
 				}
 				let blackPlayer;
 				for (const radioButton of blackButtons) {
@@ -212,6 +216,8 @@
 					black_player = new PlayerAB(parseInt(document.getElementById("blackabdepth").value));
 				} else if (blackPlayer == "blackminmax") {
 					black_player = new PlayerAB(parseInt(document.getElementById("blackminmaxdepth").value));
+				} else if (blackPlayer == "MonteCarlo") {
+					black_player = new MonteCarlo();
 				}
 				width = parseInt(widthslider.value);
 				size = parseInt(sizeslider.value);

@@ -9,7 +9,7 @@ let next;
 function setup() {
   noLoop();
   setInterval(redraw, 0);
-  createCanvas(800, 800);
+  createCanvas(400, 400);
   pixelDensity(1);
   grid = [];
   next = [];
