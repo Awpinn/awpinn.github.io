@@ -47,11 +47,15 @@ function draw() {
       let i = (x + y * width)*4;
       var a = next[x][y].a;
       var b = next[x][y].b;
-      var c = floor((a - b) * 255);
-      c = constrain(c, 0, 255);
-      pixels[i] = c;
-      pixels[i + 1] = c;
-      pixels[i + 2] = c;
+      var c = map((a-b), 0, 1, 1, 0);
+      var rgb = new Array();
+      rgb['red']=rgb['green']=rgb['blue']=0;
+      if (c > 0.01) {
+        rgb = hsv2rgb(map(x, 0, width, 0, 1), map(y, 0, height, 0, 1), c)
+      }
+      pixels[i] = rgb['red'];
+      pixels[i + 1] = rgb['green'];
+      pixels[i + 2] = rgb['blue'];
       pixels[i + 3] = 255;
     }
   }
@@ -103,3 +107,52 @@ function laplacianB(x, y) {
   sumB += grid[x - 1][y + 1].b * 0.05;
   return sumB;
 }
+
+function hsv2rgb(h,s,v) {
+  // Adapted from http://www.easyrgb.com/math.html
+  // hsv values = 0 - 1, rgb values = 0 - 255
+  var r, g, b;
+  var RGB = new Array();
+  if(s==0){
+    RGB['red']=RGB['green']=RGB['blue']=Math.round(v*255);
+  }else{
+    // h must be < 1
+    var var_h = h * 6;
+    if (var_h==6) var_h = 0;
+    //Or ... var_i = floor( var_h )
+    var var_i = Math.floor( var_h );
+    var var_1 = v*(1-s);
+    var var_2 = v*(1-s*(var_h-var_i));
+    var var_3 = v*(1-s*(1-(var_h-var_i)));
+    if(var_i==0){ 
+      var_r = v; 
+      var_g = var_3; 
+      var_b = var_1;
+    }else if(var_i==1){ 
+      var_r = var_2;
+      var_g = v;
+      var_b = var_1;
+    }else if(var_i==2){
+      var_r = var_1;
+      var_g = v;
+      var_b = var_3
+    }else if(var_i==3){
+      var_r = var_1;
+      var_g = var_2;
+      var_b = v;
+    }else if (var_i==4){
+      var_r = var_3;
+      var_g = var_1;
+      var_b = v;
+    }else{ 
+      var_r = v;
+      var_g = var_1;
+      var_b = var_2
+    }
+    //rgb results = 0 ÷ 255  
+    RGB['red']=Math.round(var_r * 255);
+    RGB['green']=Math.round(var_g * 255);
+    RGB['blue']=Math.round(var_b * 255);
+    }
+  return RGB;  
+};

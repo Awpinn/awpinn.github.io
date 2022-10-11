@@ -2,12 +2,13 @@
 <html lang="en">
 	<head>
 		<script src="p5.js"></script>
-		<link rel="stylesheet" type="text/css" href="style.css" />
+		<link rel="stylesheet" type="text/css" href="../style.css" />
+		<link rel="stylesheet" type="text/css" href="style.css"
 		<meta charset="utf-8" />
 	</head>
 
 	<body>
-    <a class="hvr-skew-backward" href="../../index.html">Return to Main Page</a>
+    <a class="hvr-skew-backward" href="../../Projects.html">Return to Projects Page</a>
 		<div id="PlayerOptions">
 			<div id="WhitePlayer">
 				<h2>White Player</h2>
@@ -16,9 +17,13 @@
 						<div id="selector">
 							<div><input type="radio" name="whitePlayer" value="manual" checked /> Manual Player</div>
 							<div><input type="radio" name="whitePlayer" value="random" /> Random Player</div>
-							<div><input type="radio" name="whitePlayer" value="MonteCarlo" /> MonteCarlo</div>
 						</div>
 						<div id="selector">
+							<div id="depth">
+								<input type="radio" name="whitePlayer" value="MonteCarlo" id="whitemontecarlo" /> MonteCarlo
+								<input type="range" min="1" max="6" value="3" class="slider" style="display: none" id="whitemontecarlodepth" />
+								<p style="display: none" id="whitemontecarlooutput"></p>
+							</div>
 							<div id="depth">
 								<input type="radio" name="whitePlayer" value="whiteab" id="whiteab" /> Alpha-Beta Player
 								<input type="range" min="1" max="6" value="5" class="slider" style="display: none" id="whiteabdepth" />
@@ -40,9 +45,13 @@
 						<div id="selector">
 							<div><input type="radio" name="blackPlayer" value="manual" checked /> Manual Player</div>
 							<div><input type="radio" name="blackPlayer" value="random" /> Random Player</div>
-							<div><input type="radio" name="whitePlayer" value="MonteCarlo" /> MonteCarlo</div>
 						</div>
 						<div id="selector">
+							<div id="depth">
+								<input type="radio" name="blackPlayer" value="MonteCarlo" id="blackmontecarlo" /> MonteCarlo
+								<input type="range" min="1" max="6" value="3" class="slider" style="display: none" id="blackmontecarlodepth" />
+								<p style="display: none" id="blackmontecarlooutput"></p>
+							</div>
 							<div id="depth">
 								<input type="radio" name="blackPlayer" value="blackab" id="blackab" /> Alpha-Beta Player
 								<input type="range" min="1" max="6" value="5" class="slider" style="display: none" id="blackabdepth" />
@@ -135,21 +144,36 @@
 					case "whiteab":
 						document.getElementById("whiteabdepth").style.display = "block";
 						document.getElementById("whiteminmaxdepth").style.display = "none";
+						document.getElementById("whitemontecarlodepth").style.display = "none";
 						document.getElementById("whiteaboutput").style.display = "block";
 						document.getElementById("whiteminmaxoutput").style.display = "none";
+						document.getElementById("whitemontecarlooutput").style.display = "none";
 						break;
 					case "whiteminmaxdepth":
 					case "whiteminmax":
 						document.getElementById("whiteabdepth").style.display = "none";
 						document.getElementById("whiteminmaxdepth").style.display = "block";
+						document.getElementById("whitemontecarlodepth").style.display = "none";
 						document.getElementById("whiteaboutput").style.display = "none";
 						document.getElementById("whiteminmaxoutput").style.display = "block";
+						document.getElementById("whitemontecarlooutput").style.display = "none";
+						break;
+					case "whitemontecarlodepth":
+					case "whitemontecarlo":
+						document.getElementById("whiteabdepth").style.display = "none";
+						document.getElementById("whiteminmaxdepth").style.display = "none";
+						document.getElementById("whitemontecarlodepth").style.display = "block";
+						document.getElementById("whiteaboutput").style.display = "none";
+						document.getElementById("whiteminmaxoutput").style.display = "none";
+						document.getElementById("whitemontecarlooutput").style.display = "block";
 						break;
 					default:
 						document.getElementById("whiteabdepth").style.display = "none";
 						document.getElementById("whiteminmaxdepth").style.display = "none";
+						document.getElementById("whitemontecarlodepth").style.display = "none";
 						document.getElementById("whiteaboutput").style.display = "none";
 						document.getElementById("whiteminmaxoutput").style.display = "none";
+						document.getElementById("whitemontecarlooutput").style.display = "none";
 						break;
 				}
 			});
@@ -160,21 +184,36 @@
 					case "blackabdepth":
 						document.getElementById("blackabdepth").style.display = "block";
 						document.getElementById("blackminmaxdepth").style.display = "none";
+						document.getElementById("blackmontecarlodepth").style.display = "none";
 						document.getElementById("blackaboutput").style.display = "block";
 						document.getElementById("blackminmaxoutput").style.display = "none";
+						document.getElementById("blackmontecarlooutput").style.display = "none";
 						break;
 					case "blackminmax":
 					case "blackminmaxdepth":
 						document.getElementById("blackabdepth").style.display = "none";
 						document.getElementById("blackminmaxdepth").style.display = "block";
+						document.getElementById("blackmontecarlodepth").style.display = "none";
 						document.getElementById("blackaboutput").style.display = "none";
 						document.getElementById("blackminmaxoutput").style.display = "block";
+						document.getElementById("blackmontecarlooutput").style.display = "none";
+						break;
+					case "blackmontecarlo":
+					case "blackmontecarlodepth":
+						document.getElementById("blackabdepth").style.display = "none";
+						document.getElementById("blackminmaxdepth").style.display = "none";
+						document.getElementById("blackmontecarlodepth").style.display = "block";
+						document.getElementById("blackaboutput").style.display = "none";
+						document.getElementById("blackminmaxoutput").style.display = "none";
+						document.getElementById("blackmontecarlooutput").style.display = "block";
 						break;
 					default:
 						document.getElementById("blackabdepth").style.display = "none";
 						document.getElementById("blackminmaxdepth").style.display = "none";
+						document.getElementById("blackmontecarlodepth").style.display = "none";
 						document.getElementById("blackaboutput").style.display = "none";
 						document.getElementById("blackminmaxoutput").style.display = "none";
+						document.getElementById("blackmontecarlooutput").style.display = "none";
 						break;
 				}
 			});
@@ -198,7 +237,7 @@
 				} else if (whitePlayer == "whiteminmax") {
 					white_player = new PlayerAB(parseInt(document.getElementById("whiteminmaxdepth").value));
 				} else if (whitePlayer == "MonteCarlo") {
-					white_player = new MonteCarlo();
+					white_player = new MonteCarlo(parseInt(document.getElementById("whitemontecarlodepth").value));
 				}
 				let blackPlayer;
 				for (const radioButton of blackButtons) {
@@ -217,7 +256,7 @@
 				} else if (blackPlayer == "blackminmax") {
 					black_player = new PlayerAB(parseInt(document.getElementById("blackminmaxdepth").value));
 				} else if (blackPlayer == "MonteCarlo") {
-					black_player = new MonteCarlo();
+					black_player = new MonteCarlo(parseInt(document.getElementById("blackmontecarlodepth").value));
 				}
 				width = parseInt(widthslider.value);
 				size = parseInt(sizeslider.value);
@@ -228,24 +267,36 @@
 			blackABOutput.innerHTML = "Depth: " + blackABSlider.value;
 			var blackMinMaxSlider = document.getElementById("blackminmaxdepth");
 			var blackMinMaxOutput = document.getElementById("blackminmaxoutput");
-			blackMinMaxOutput.innerHTML = "Depth: " + blackABSlider.value;
+			blackMinMaxOutput.innerHTML = "Depth: " + blackMinMaxSlider.value;
+			var blackMonteCarloSlider = document.getElementById("blackmontecarlodepth");
+			var blackMonteCarloOutput = document.getElementById("blackmontecarlooutput");
+			blackMonteCarloOutput.innerHTML = "Time: " + blackMonteCarloSlider.value;
 			var whiteABSlider = document.getElementById("whiteabdepth");
 			var whiteABOutput = document.getElementById("whiteaboutput");
-			whiteABOutput.innerHTML = "Depth: " + blackABSlider.value;
+			whiteABOutput.innerHTML = "Depth: " + whiteABSlider.value;
 			var whiteMinMaxSlider = document.getElementById("whiteminmaxdepth");
 			var whiteMinMaxOutput = document.getElementById("whiteminmaxoutput");
-			whiteMinMaxOutput.innerHTML = "Depth: " + blackABSlider.value;
+			whiteMinMaxOutput.innerHTML = "Depth: " + whiteMinMaxSlider.value;
+			var whiteMonteCarloSlider = document.getElementById("whitemontecarlodepth");
+			var whiteMonteCarloOutput = document.getElementById("whitemontecarlooutput");
+			whiteMonteCarloOutput.innerHTML = "Time: " + whiteMonteCarloSlider.value;
 			blackABSlider.oninput = function () {
 				blackABOutput.innerHTML = "Depth: " + blackABSlider.value;
 			};
 			blackMinMaxSlider.oninput = function () {
 				blackMinMaxOutput.innerHTML = "Depth: " + blackMinMaxSlider.value;
 			};
+			blackMonteCarloSlider.oninput = function () {
+				blackMonteCarloOutput.innerHTML = "Time: " + blackMonteCarloSlider.value;
+			};
 			whiteABSlider.oninput = function () {
 				whiteABOutput.innerHTML = "Depth: " + whiteABSlider.value;
 			};
 			whiteMinMaxSlider.oninput = function () {
 				whiteMinMaxOutput.innerHTML = "Depth: " + whiteMinMaxSlider.value;
+			};
+			whiteMonteCarloSlider.oninput = function () {
+				whiteMonteCarloOutput.innerHTML = "Time: " + whiteMonteCarloSlider.value;
 			};
 		</script>
 	</body>

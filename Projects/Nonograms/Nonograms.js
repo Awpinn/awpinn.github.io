@@ -7,6 +7,7 @@ let COLRESTRICTIONS = [];
 let ROWRESTRICTIONS = [];
 let ROWLIST = [];
 let COLLIST = [];
+let queue = [];
 let draggedVar = 1;
 let knownBoard = true;
 
@@ -67,6 +68,14 @@ function finishBoard() {
     COLLIST.push(initial_list(COLRESTRICTIONS[col], SIZE));
   }
   manual = false;
+
+  if (ROWLIST.length != 0){
+    if (!manual){
+      while(AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) == 1);
+    }
+  }
+  BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
+  console.log(queue);
 }
 
 function randomBoard() {
@@ -79,6 +88,7 @@ function randomBoard() {
 function clearBoard() {
   manual = true;
   BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
+  setup();
 }
 
 function clearRestrictions() {
@@ -145,14 +155,13 @@ function draw() {
             stroke('red');
           }
         } else {
-          fill('black');
+          stroke('black');
         }
-        strokeWeight(3);
+        strokeWeight(width/150);
         line(row*distance, col*distance, row*distance+distance, col*distance+distance);
         line(row*distance+distance, col*distance, row*distance, col*distance+distance);
         stroke('black');
-      }
-      else {
+      } else {
         fill('white');
         rect(row*distance, col*distance, distance, distance);
       }
@@ -181,9 +190,25 @@ function draw() {
     noLoop();
   }
 
-  if (ROWLIST.length != 0){
-    if (!manual){
-      AIPLAY(SIZE, BOARD, ROWLIST, COLLIST);     
+  if (queue.length != 0) {
+    if (ROWLIST.length != 0){
+      if (!manual){
+        let curr = queue.shift();
+        console.log(curr);
+        if (curr[0] == 'r') {
+          let row = curr[1];
+          for (let col = 0; col < SIZE; col++) {
+            BOARD[row][col] = curr[2][col];
+          }
+        } else if (curr[0] == 'c') {
+          let col = curr[1];
+          for (let row = 0; row < SIZE; row++) {
+            BOARD[row][col] = curr[2][row];
+          }
+        } else {
+          console.log("uh oh");
+        }
+      }
     }
   }
 }
@@ -224,10 +249,7 @@ function mousePressed() {
 function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
   let changing = false;
   for (let row = 0; row < SIZE; row++) {
-    if (row == 1) {
-      let x = 0;
-      // pass
-    }
+    let tempRow = [...BOARD[row]];
     let tempRowList = [...ROWLIST[row]];
     ROWLIST[row] = prune_lines(ROWLIST[row], BOARD[row]);
     if (!arraysEqual(tempRowList, ROWLIST[row])) {
@@ -237,6 +259,9 @@ function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
     if (currRow.length != SIZE) {
       return -1;
     }
+    if (!arraysEqual(tempRow, currRow)) {
+      queue.push(['r', row, currRow]);
+    }
     BOARD[row] = currRow;
   }
   for (let col = 0; col < SIZE; col++) {
@@ -245,6 +270,7 @@ function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
     for (let row = 0; row < SIZE; row++) {
       tempBoardCol.push(BOARD[row][col]);
     }
+    let tempCol = [...tempBoardCol];
     COLLIST[col] = prune_lines(COLLIST[col], tempBoardCol);
     if (!arraysEqual(tempColList, COLLIST[col])) {
       changing = true;
@@ -255,6 +281,9 @@ function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
     }
     for (let row = 0; row < SIZE; row++) {
       BOARD[row][col] = currCol[row];
+    }
+    if (!arraysEqual(tempCol, currCol)) {
+      queue.push(['c', col, currCol]);
     }
   }
   if (!changing) {
