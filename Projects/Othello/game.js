@@ -39,11 +39,20 @@ function setup() {
 }
 
 function draw() {
+  console.log(board.turn);
   background(white);
   noStroke();
-  fill('black');
   textSize(width/3);
   textAlign(CENTER, CENTER);
+  if (board.turn == 1) {
+    fill('white');
+    rect(0, 0, (width*size), 50);
+    fill('black');
+  } else {
+    fill('black');
+    rect(0, 0, (width*size), 50);
+    fill('white');
+  }
   text(header, ((width*size)/2), 25);
   let count = 0;
   for (let row = 0; row < board.size; row++) {
@@ -100,10 +109,31 @@ function draw() {
         black_depth = " " + black_player.max_depth;
       }
       header = white_player.name + white_depth + ' vs ' + black_player.name + black_depth;
+      
+      textSize(width/3);
+      textAlign(CENTER, CENTER);
+      if (board.turn == 1) {
+        fill('white');
+        rect(0, 0, (width*size), 50);
+        fill('black');
+      } else {
+        fill('black');
+        rect(0, 0, (width*size), 50);
+        fill('white');
+      }
+      text(header, ((width*size)/2), 25);
       if (board.turn == -1) {
+        fill('black');
+        rect(0, 0, (width*size), 50);
+        fill('white');
+        text(header, ((width*size)/2), 25);
         MoveHelper(black_player); 
       }
-      if (board.turn == 1) {
+      else if (board.turn == 1) {
+        fill('white');
+        rect(0, 0, (width*size), 50);
+        fill('black');
+        text(header, ((width*size)/2), 25);
         MoveHelper(white_player);
       }
     }

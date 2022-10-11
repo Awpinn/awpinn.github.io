@@ -17,8 +17,13 @@ canvas {
   margin: 15px;
 }
 
+.p5Canvas {
+  margin-top:58px;
+}
+
 .CanvasElements {
   display: flex;
+  /* margin-top:58px; */
 }
 
 main {

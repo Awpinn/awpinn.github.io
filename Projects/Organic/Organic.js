@@ -1,12 +1,14 @@
 let f = 0.055;
 let k = 0.062;
-let deltaT = 1.0;
+let deltaT = 1;
 let diffusionA = 1.0;
 let diffusionB = 0.5;
 let grid;
 let next;
+let timeSkip = 5;
 
 function setup() {
+  console.log(f, k);
   noLoop();
   setInterval(redraw, 0);
   createCanvas(400, 400);
@@ -31,13 +33,16 @@ function setup() {
 
 function draw() {
   background('white');
-  for (let x = 1; x < width-1; x++) {
-    for (let y = 1; y < height-1; y++) {
-      next[x][y].a = updateCell('a', x, y);
-      next[x][y].b = updateCell('b', x, y);
-      next[x][y].a = constrain(next[x][y].a, 0, 1);
-      next[x][y].b = constrain(next[x][y].b, 0, 1);
+  for (let i = 0; i < timeSkip; i++) {
+    for (let x = 1; x < width-1; x++) {
+      for (let y = 1; y < height-1; y++) {
+        next[x][y].a = updateCell('a', x, y);
+        next[x][y].b = updateCell('b', x, y);
+        next[x][y].a = constrain(next[x][y].a, 0, 1);
+        next[x][y].b = constrain(next[x][y].b, 0, 1);
+      }
     }
+    swap();
   }
 
 
@@ -60,8 +65,6 @@ function draw() {
     }
   }
   updatePixels();
-
-  swap();
 }
 
 function updateCell(type, x, y) {
