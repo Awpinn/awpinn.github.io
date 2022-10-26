@@ -8,7 +8,21 @@
     <script src="../libraries/p5.min.js"></script>
 </head>
 <body>
-    <p>still need to add user input and button to start solver</p>
+    <div class="buttons">
+        <div>Width: <input type="range" min="1" max="100" value="20" id="thingwidth"></div>
+        <div>Height: <input type="range" min="1" max="100" value="20" id="thingheight"></div>
+        <button id="submit">Submit</button>
+    </div>
     <script src="maze.js"></script>
+    <script>
+        w = parseInt(document.getElementById("thingwidth").value);
+        h = parseInt(document.getElementById("thingheight").value);
+        var btn = document.querySelector("#submit");
+        btn.addEventListener("click", () => {
+            w = parseInt(document.getElementById("thingwidth").value);
+            h = parseInt(document.getElementById("thingheight").value);
+            setup();
+        })
+    </script>
 </body>
 </html>

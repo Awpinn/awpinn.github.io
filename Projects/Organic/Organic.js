@@ -5,58 +5,83 @@ let diffusionA = 1.0;
 let diffusionB = 0.5;
 let grid;
 let next;
-let timeSkip = 5;
+let distance = 250;
 
 function setup() {
   console.log(f, k);
   noLoop();
   setInterval(redraw, 0);
-  createCanvas(400, 400);
-  pixelDensity(1);
+  createCanvas(500, 500);
+  pixelDensity(distance/500);
   grid = [];
   next = [];
-  for (let x = 0; x < width; x++) {
+  for (let x = 0; x < distance; x++) {
     grid[x] = [];
     next[x] = [];
-    for (let y = 0; y < height; y++) {
+    for (let y = 0; y < distance; y++) {
       grid[x][y] = { a: 1, b: 0 };
       next[x][y] = { a: 1, b: 0 };
     }
   }
 
-  for (var i = (height/2)-5; i < (height/2)+5; i++) {
-    for (var j = (width/2)-5; j < (width/2)+5; j++) {
+  for (var i = (distance/2)-5; i < (distance/2)+5; i++) {
+    for (var j = (distance/2)-5; j < (distance/2)+5; j++) {
       grid[i][j].b = 1;
+    }
+  }
+}
+
+function update() {
+  for (let x = 1; x < distance-1; x++) {
+    for (let y = 1; y < distance-1; y++) {
+      next[x][y].a = updateCell('a', x, y);
+      next[x][y].b = updateCell('b', x, y);
+      next[x][y].a = constrain(next[x][y].a, 0, 1);
+      next[x][y].b = constrain(next[x][y].b, 0, 1);
+    }
+  }
+  swap();
+}
+
+function mouseDragged() {
+  if (mouseX >= 10 && mouseX < (width - 10) && mouseY >= 10 && mouseY < (height - 10)) {
+    for (let x = 0; x < distance/50; x++) {
+      for (let y = 0; y < distance/50; y++) {
+        let tempX = constrain(floor(((mouseX/width)*distance) + x), 0, distance-1);
+        let tempY = constrain(floor(((mouseY/height)*distance) + y), 0, distance-1);
+        grid[tempX][tempY].a = 0;
+        grid[tempX][tempY].b = 0;
+      }
     }
   }
 }
 
 function draw() {
   background('white');
-  for (let i = 0; i < timeSkip; i++) {
-    for (let x = 1; x < width-1; x++) {
-      for (let y = 1; y < height-1; y++) {
-        next[x][y].a = updateCell('a', x, y);
-        next[x][y].b = updateCell('b', x, y);
-        next[x][y].a = constrain(next[x][y].a, 0, 1);
-        next[x][y].b = constrain(next[x][y].b, 0, 1);
-      }
-    }
-    swap();
-  }
-
+  update();
 
   loadPixels();
-  for (let x = 0; x < width; x++) {
-    for (let y = 0; y < height; y++) {
-      let i = (x + y * width)*4;
+  for (let x = 0; x < distance; x++) {
+    for (let y = 0; y < distance; y++) {
+      let i = (x + y * distance)*4;
       var a = next[x][y].a;
       var b = next[x][y].b;
       var c = map((a-b), 0, 1, 1, 0);
       var rgb = new Array();
       rgb['red']=rgb['green']=rgb['blue']=0;
       if (c > 0.01) {
-        rgb = hsv2rgb(map(x, 0, width, 0, 1), map(y, 0, height, 0, 1), c)
+        rgb = hsv2rgb(map(x, 0, distance, 0, 1), map(y, 0, distance, 0, 1), c)
+      }
+      if (c > 0.9) {
+        let cChange = (c-0.9)*10;
+        rgb['red'] = rgb['red'] * (1 - cChange) + 255 * cChange;
+        rgb['green'] = rgb['green'] * (1 - cChange) + 255 * cChange;
+        rgb['blue'] = rgb['blue'] * (1 - cChange) + 255 * cChange;
+        if (c > 1) {
+          rgb['red'] = 255;
+          rgb['green'] = 255;
+          rgb['blue'] = 255;
+        }
       }
       pixels[i] = rgb['red'];
       pixels[i + 1] = rgb['green'];

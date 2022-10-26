@@ -13,20 +13,18 @@
     <div class = "buttons">
         <input type="number" id = "f" value=0.055>
         <input type="number" id = "k" value=0.062>
-        <input type="number" id = "time" step="1" value=1>
         <button id="submit">Submit</button>
     </div>
     <p>Note: this is a slow implementation. Each frame is calculated given the pixels of the frame before it. This means that at the very least, the algorithm is limited by frame rate (which in the browser is not ideal).</p>
+    <p>Inspired by: <a href="http://karlsims.com/rd.html">Karl Sims' Reaction-Diffusion Tutorial</a></p>
     <script src="Organic.js"></script>
     <script>
         var btn = document.querySelector("#submit");
         var fbtn = document.getElementById("f");
-        var timebtn = document.getElementById("time");
         var kbtn = document.getElementById("k");
         btn.addEventListener("click", () => {
             f = parseFloat(fbtn.value);
             k = parseFloat(kbtn.value);
-            timeSkip = parseInt(timebtn.value);
             setup();
         });
     </script>
