@@ -11,8 +11,18 @@
 <body>
     <a class="hvr-skew-backward" href="../../Projects.html">Return to Projects Page</a>
     <div class = "buttons">
+        <select name="language" id="language">
+        <option value="default" selected>JavaScript</option>
+        <option value="python">Python</option>
+        <option value="c++">C++</option>
+        <option value="java">Java</option>
+        </select>
+        <label for="f">f:</label>
         <input type="number" id = "f" value=0.055>
+        <label for="k">k:</label>
         <input type="number" id = "k" value=0.062>
+        <label for="resolution">Total Pixel Width/Height:</label>
+        <input type="number" id = "resolution" step="50" value=150>
         <button id="submit">Submit</button>
     </div>
     <p>Note: this is a slow implementation. Each frame is calculated given the pixels of the frame before it. This means that at the very least, the algorithm is limited by frame rate (which in the browser is not ideal).</p>
@@ -22,9 +32,11 @@
         var btn = document.querySelector("#submit");
         var fbtn = document.getElementById("f");
         var kbtn = document.getElementById("k");
+        var resolution = document.getElementById("resolution");
         btn.addEventListener("click", () => {
             f = parseFloat(fbtn.value);
             k = parseFloat(kbtn.value);
+            distance = parseInt(resolution.value)
             setup();
         });
     </script>
