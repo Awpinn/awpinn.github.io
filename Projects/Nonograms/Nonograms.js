@@ -10,6 +10,10 @@ let COLLIST = [];
 let queue = [];
 let draggedVar = 1;
 let knownBoard = true;
+let autoX = false;
+let showWrong = false;
+let finished = false;
+let rgb = [256, 0, 0];
 
 let manual = true;
 let done = false;
@@ -75,17 +79,22 @@ function finishBoard() {
     }
   }
   BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
-  console.log(queue);
 }
 
 function randomBoard() {
-  knownBoard = true;
   BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
+  finalBoard = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
   [ROWRESTRICTIONS, COLRESTRICTIONS, ROWLIST, COLLIST] = validBoard();
+  while (AIPLAY(SIZE, finalBoard, ROWLIST, COLLIST) == 1);
+  console.log(finalBoard);
+  knownBoard = true;
+  finished = false;
   setup();
+  
 }
 
 function clearBoard() {
+  finished = false; 
   manual = true;
   BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
   setup();
@@ -131,12 +140,96 @@ function submitRestrictions() {
   }
 }
 
+function checkFinished() {
+  result = true;
+  if (!knownBoard) {
+    result = false;
+    return;
+  }
+  for (let i = 0; i < SIZE; i++) {
+    for (let j = 0; j < SIZE; j++) {
+      if (finalBoard[i][j] != BOARD[i][j]) {
+        result = false;
+        return;
+      }
+    }
+  }
+  finished = result;
+}
+
 function draw() {
+  // fill('white');
+  if (autoX) {
+    allRows = []
+    allCols = []
+    for (let i = 0; i < SIZE; i++) {
+      let row = []
+      let rowBool = false;
+      let col = []
+      let colBool = false;
+      for (let j = 0; j < SIZE; j++) {
+        if (BOARD[i][j] == 1) {
+          if (rowBool == true) {
+            row.push(row.pop()+1);
+          } else {
+            row.push(1);
+            rowBool = true;
+          }
+        } else {
+          rowBool = false;
+        }
+        if (BOARD[j][i] == 1) {
+          if (colBool == true) {
+            col.push(col.pop()+1);
+          } else {
+            col.push(1);
+            colBool = true;
+          }
+        } else {
+          colBool = false;
+        }
+      }
+      allRows.push(row);
+      allCols.push(col);
+    }
+    for (let i = 0; i < SIZE; i++) {
+      if (arraysEqual(ROWRESTRICTIONS[i], allRows[i])) {
+        for (let j = 0; j < SIZE; j++) {
+          if (BOARD[i][j] != 1) BOARD[i][j] = -1
+        }
+      }
+      if (arraysEqual(COLRESTRICTIONS[i], allCols[i])) {
+        for (let j = 0; j < SIZE; j++) {
+          if (BOARD[j][i] != 1) BOARD[j][i] = -1
+        }
+      }
+    }
+  }
+  if (!finished) checkFinished();
+  if (finished) {
+    let step = 2;
+    if (rgb[0] > 0 && rgb[1] >= 0 && rgb[2] == 0) {
+      rgb[0] -= step;
+      rgb[1] += step;
+    }
+    else if (rgb [1] > 0 && rgb[2] >= 0 && rgb[0] == 0) {
+      rgb[1] -= step;
+      rgb[2] += step;
+    }
+    else if (rgb [2] > 0 && rgb[0] >= 0 && rgb[1] == 0) {
+      rgb[2] -= step;
+      rgb[0] += step;
+    }
+  }
   for (let row = 0; row < SIZE; row++) {
     for (let col = 0; col < SIZE; col++) {
       if (BOARD[col][row] == 1) {
-        if (knownBoard) {
-          if (finalBoard[col][row] == 1) {
+        if (finished) {
+          // console.log(rgb[0], rgb[1], rgb[2]);
+          fill(rgb[0], rgb[1], rgb[2]);
+        }
+        else if (knownBoard) {
+          if (finalBoard[col][row] == 1 || !showWrong) {
             fill('black');
           } else {
             fill('red');
@@ -149,7 +242,7 @@ function draw() {
         fill('white');
         rect(row*distance, col*distance, distance, distance);
         if (knownBoard) {
-          if (finalBoard[col][row] == 0) {
+          if (finalBoard[col][row] == 0 || !showWrong) {
             stroke('black');
           } else {
             stroke('red');
@@ -176,25 +269,24 @@ function draw() {
     strokeWeight(3);
   }
 
-  done = true;
+  // done = true;
 
-  for (let row = 0; row < SIZE; row++) {
-    for (let col = 0; col < SIZE; col++) {
-      if (BOARD[col][row] == 0) {
-        done = false;
-      }
-    }
-  }
+  // for (let row = 0; row < SIZE; row++) {
+  //   for (let col = 0; col < SIZE; col++) {
+  //     if (BOARD[col][row] == 0) {
+  //       done = false;
+  //     }
+  //   }
+  // }
 
-  if (done) {
-    noLoop();
-  }
+  // if (done) {
+  //   noLoop();
+  // }
 
   if (queue.length != 0) {
     if (ROWLIST.length != 0){
       if (!manual){
         let curr = queue.shift();
-        console.log(curr);
         if (curr[0] == 'r') {
           let row = curr[1];
           for (let col = 0; col < SIZE; col++) {
@@ -248,6 +340,8 @@ function mousePressed() {
 
 function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
   let changing = false;
+  tempAutoX = autoX;
+  autoX = false;
   for (let row = 0; row < SIZE; row++) {
     let tempRow = [...BOARD[row]];
     let tempRowList = [...ROWLIST[row]];
@@ -257,6 +351,7 @@ function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
     }
     let currRow = eliminate_options(ROWLIST[row], SIZE);
     if (currRow.length != SIZE) {
+      autoX = tempAutoX;
       return -1;
     }
     if (!arraysEqual(tempRow, currRow)) {
@@ -286,6 +381,7 @@ function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
       queue.push(['c', col, currCol]);
     }
   }
+  autoX = tempAutoX;
   if (!changing) {
     return 0;
   }

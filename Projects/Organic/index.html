@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
     <title>Organic Generation</title>
     <script src="../libraries/p5.min.js"></script>
 </head>
@@ -12,11 +12,10 @@
     <a class="hvr-skew-backward" href="../../Projects.html">Return to Projects Page</a>
     <div class = "buttons">
         <label for ></label>
-        <select name="language" id="language">
-        <option value="default" selected>JavaScript</option>
-        <option value="python">Python</option>
-        <option value="c++">C++</option>
-        <option value="java">Java</option>
+        <select name="options" id="options">
+        <option value="default" selected>Default</option>
+        <option value="mitosis">Mitosis</option>
+        <option value="coral">Coral Growth</option>
         </select>
         <label for="f">f:</label>
         <input type="number" id = "f" value=0.055>
@@ -33,6 +32,7 @@
         var btn = document.querySelector("#submit");
         var fbtn = document.getElementById("f");
         var kbtn = document.getElementById("k");
+        var selectedOption = document.querySelector("#options");
         var resolution = document.getElementById("resolution");
         btn.addEventListener("click", () => {
             f = parseFloat(fbtn.value);
@@ -40,6 +40,7 @@
             distance = parseInt(resolution.value)
             setup();
         });
+        
     </script>
 </body>
 </html>

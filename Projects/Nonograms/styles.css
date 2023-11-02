@@ -1,7 +1,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #ececec;
+  background-color: #EDEBEB;
 }
 
 .header {
@@ -11,7 +11,7 @@ html, body {
 }
 
 h1 {
-  color: black;
+  color: #990000;
   text-align: left;
   font-size: 48px;
   margin: 10px 0 0 0;
@@ -30,16 +30,16 @@ canvas {
 }
 
 #boardBorder {
-  background-color: white;
+  background-color: #FFFFFF;
   margin: 0;
   width: 550px;
   height: 550px;
-  border:5px solid black;
+  border: 5px solid #990000;
   padding: 20px;
 }
 
 #board {
-  background-color: white;
+  background-color: #FFFFFF;
   display: flex;
   position:absolute;
   margin: 0;
@@ -48,8 +48,8 @@ canvas {
 #row {
   position:absolute;
   top: 150px;
-  height:500px;
-  width:150px;
+  height: 500px;
+  width: 150px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -57,11 +57,11 @@ canvas {
 
 #col {
   position:absolute;
-  left:150px;
-  height:150px;
+  left: 150px;
+  height: 150px;
   width: 500px;
   display: flex;
-  flex-direction:row;
+  flex-direction: row;
   justify-content: space-around;
 }
 
@@ -77,21 +77,27 @@ canvas {
 
 .p5Canvas {
   position: absolute;
-  top:150px;
-  left:150px;
+  top: 150px;
+  left: 150px;
 }
 
 .schtuff {
-  background-color: white;
+  background-color: #FFFFFF;
   display: flex;
-  border:5px solid black;
+  border: 5px solid #990000;
   padding: 10px;
   margin: 0 40px 0 0 ;
   width:fit-content;
 }
 
 .header a {
-  align-self:flex-start;
+  align-self: flex-start;
+  color: #990000;
+  text-decoration: none;
+}
+
+.header a:hover {
+  text-decoration: underline;
 }
 
 #buttons {
@@ -106,14 +112,24 @@ canvas {
 
 button {
   margin-bottom: 15px;
+  background-color: #990000;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #7A0000;
 }
 
 .allsliders {
-  display:flex;
+  display: flex;
 }
 
 .slidecontainer {
-  display:flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
@@ -122,38 +138,23 @@ button {
   margin: 10px 20px;
   padding: 10px 20px;
   color: white;
-  background-color: dimgray;
+  background-color: #990000;
   text-decoration: none;
 }
 
-/* Skew Backward */
-.hvr-skew-backward {
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-  -webkit-transition-property: transform;
-  transition-property: transform;
-  -webkit-transform-origin: 0 100%;
-  transform-origin: 0 100%;
-}
-.hvr-skew-backward:hover, .hvr-skew-backward:focus, .hvr-skew-backward:active {
-  -webkit-transform: skew(10deg);
-  transform: skew(10deg);
+.hvr-skew-backward:hover {
+  background-color: #7A0000;
 }
 
 .slider {
-  margin-top:12px;
+  margin-top: 12px;
   -webkit-appearance: none;
+  appearance: none;
   height: 8px;
-  outline:none;
+  outline: none;
   background: #d3d3d3;
-  opacity:0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
+  opacity: 0.7;
+  transition: opacity 0.2s;
 }
 
 .slider::-webkit-slider-thumb {
@@ -161,8 +162,8 @@ button {
   appearance: none;
   width: 12px;
   height: 12px;
-  border-radius: 50%; 
-  background: #04248b;
+  border-radius: 50%;
+  background: #990000;
   cursor: pointer;
 }
 
@@ -170,7 +171,6 @@ button {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #04248b;
+  background: #990000;
   cursor: pointer;
 }
-

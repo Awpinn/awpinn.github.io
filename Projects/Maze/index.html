@@ -6,13 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maze Generation</title>
     <script src="../libraries/p5.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+
 </head>
 <body>
+    <div class="header">
+      <a class="hvr-skew-backward" href="../../Projects.html">Return to Projects Page</a>
+    </div>
     <div class="buttons">
         <div>Width: <input type="range" min="1" max="100" value="20" id="thingwidth"></div>
         <div>Height: <input type="range" min="1" max="100" value="20" id="thingheight"></div>
         <button id="submit">Submit</button>
     </div>
+    <div class="summary">
+        <p>This maze generator utilizes the Recursive Backtracking algorithm to create intricate mazes. The visualization starts with a blank canvas, and as the generation process unfolds, a maze structure emerges. Walls are gradually removed, revealing interconnected paths and dead ends, until a fully-formed maze is created. The generated maze can then be explored using pathfinding algorithms to navigate from the starting point to the goal. With interactive controls to adjust the maze dimensions, you can customize the size and complexity of the maze. Watch as the mesmerizing process of maze creation unfolds before your eyes, providing both entertainment and a deeper understanding of maze generation techniques.</p>
+      </div>
     <script src="maze.js"></script>
     <script>
         w = parseInt(document.getElementById("thingwidth").value);

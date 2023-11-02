@@ -1,0 +1,69 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .buttons {
+    margin-bottom: 20px;
+  }
+  
+  .buttons label {
+    margin-right: 5px;
+  }
+  
+  .buttons select,
+  .buttons input[type="number"] {
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  #submit {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  p {
+    margin-bottom: 10px;
+  }
+  
+  /* Hover effect for link */
+  .hvr-skew-backward {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .hvr-skew-backward:hover {
+    transform: skewX(-20deg);
+  }
+  
+  /* Responsive styles */
+  @media screen and (max-width: 600px) {
+    body {
+      padding: 10px;
+    }
+  
+    .buttons select,
+    .buttons input[type="number"] {
+      width: 80px;
+      margin-right: 5px;
+    }
+  }
+  

@@ -16,6 +16,16 @@
       <h1>Nonograms AI</h1>
       <div class="schtuff">
         <div class="allsliders">
+          <label class="switch">
+            Enable Auto X's
+            <input type="checkbox" onclick="toggleAutoX()">
+            <span class="slider"></span>
+          </label>        
+          <label class="switch">
+            Show Wrong Answers
+            <input type="checkbox" onclick="showWrongAnswers()">
+            <span class="slider"></span>
+          </label>        
           <div class="slidecontainer">
             <input type="range" min="3" max="20" value="10" class="slider" id="sizeRange">
             <h2 id=boardSize></h2>
@@ -111,6 +121,14 @@
           inputRow.wrap="hard";
           document.getElementById("row").appendChild(inputRow);
         }
+      }
+
+      function toggleAutoX() {
+        autoX = !autoX;
+      }
+
+      function showWrongAnswers() {
+        showWrong = !showWrong
       }
 
       function countInstances(string, word) {
