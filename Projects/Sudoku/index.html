@@ -7,16 +7,33 @@
     <link rel="stylesheet" type="text/css" href="../style.css" />
     <title>Document</title>
     <script src="../libraries/p5.min.js"></script>
+    
 </head>
 <body>
     <a class="hvr-skew-backward" href="../../Projects.html">Return to Projects Page</a>
     <p>This page still needs a lot of work to be done to it.</p>
     <button id="Generate">Generate Board</button>
+    <div class="CanvasElements">
+        <main oncontextmenu="return false;"></main>
+        <div class="allCurrent" id="allCurrent"></div>
+      </div>
+      <div class="sudoku-board">
+        <button class="sudoku-cell" id="cell1" onclick="updateSelectedNum(1)">1</button>
+        <button class="sudoku-cell" id="cell2" onclick="updateSelectedNum(2)">2</button>
+        <button class="sudoku-cell" id="cell3" onclick="updateSelectedNum(3)">3</button>
+        <button class="sudoku-cell" id="cell4" onclick="updateSelectedNum(4)">4</button>
+        <button class="sudoku-cell" id="cell5" onclick="updateSelectedNum(5)">5</button>
+        <button class="sudoku-cell" id="cell6" onclick="updateSelectedNum(6)">6</button>
+        <button class="sudoku-cell" id="cell7" onclick="updateSelectedNum(7)">7</button>
+        <button class="sudoku-cell" id="cell8" onclick="updateSelectedNum(8)">8</button>
+        <button class="sudoku-cell" id="cell9" onclick="updateSelectedNum(9)">9</button>
+    </div>
     <script src="lodash.js"></script>
     <script src="sudoku.js"></script>  
     <script>
         var btn = document.querySelector("#Generate");
         btn.addEventListener("click", () => {
+            attempts = 15
             board = Array(size).fill().map(() => Array(size).fill(0));
             finalBoard = Array(size).fill().map(() => Array(size).fill(0));
             generateBoard(finalBoard);

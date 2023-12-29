@@ -3,20 +3,32 @@ let size = 9;
 let distance = width/size;
 let attempts = 15;
 let counter = 1;
+let selectedNum = 1;
+let manual = true;
 
 let board = Array(size).fill().map(() => Array(size).fill(0));
 let finalBoard = Array(size).fill().map(() => Array(size).fill(0));
+let start = Array(size).fill().map(() => Array(size).fill(0));
 
 function setup() {
-    noLoop();
+    for (let i = 1; i <= 9; i++) {
+        let curCell = document.getElementById("cell"+i);
+        curCell.style.backgroundColor = "#f0f0f0";
+    }
+    manual = true;
+    updateSelectedNum(1);
+    // noLoop();
     frameRate(1);   
     createCanvas(width, width);
     generateBoard(finalBoard);
     board = _.cloneDeep(finalBoard);
     removeFromBoard(board);
+    start = _.cloneDeep(board);
+    textAlign(CENTER, CENTER);
+    textSize(distance);
     // draw();
-    console.log(solveBoard(board));
-    console.log("done");
+    // console.log(solveBoard(board));
+    // console.log("done");
 }
 
 function draw() {
@@ -31,16 +43,33 @@ function draw() {
         line(x*distance, 0, x*distance, width);
     }
     // put in the for sure numbers
-    textAlign(CENTER, CENTER);
-    textSize(distance);
     for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
-            if (board[row][col] != 0) {
+            if (start[row][col] != 0) {
+                fill('black');
+                text(''+board[row][col], col*distance+distance/2, row*distance+distance/2+3);
+            }
+            else if (board[row][col] != 0) {
+                fill('#2a5a5a');
                 text(''+board[row][col], col*distance+distance/2, row*distance+distance/2+3);
             }
         }
     }
 }
+
+function mousePressed() {
+    if (manual) {
+      if (mouseButton === LEFT) {
+        if (mouseX >= 0 && mouseX <= width && mouseY >=0 && mouseY <= width && start[floor(mouseY/distance)][floor(mouseX/distance)] == 0) {
+            board[floor(mouseY/distance)][floor(mouseX/distance)] = selectedNum;
+        }
+      } else if (mouseButton === RIGHT) {
+        if (mouseX >= 0 && mouseX <= width && mouseY >=0 && mouseY <= width && start[floor(mouseY/distance)][floor(mouseX/distance)] == 0) {
+            board[floor(mouseY/distance)][floor(mouseX/distance)] = 0;
+        }
+      }
+    }
+  }
 
 function solveBoard(grid) {
     let row = 0;
@@ -81,6 +110,16 @@ function solveBoard(grid) {
             }
         }
         grid[row][col] = 0
+}
+
+function updateSelectedNum(x) {
+    let name = "cell" + selectedNum;
+    let curCell = document.getElementById(name);
+    curCell.style.backgroundColor = "#f0f0f0";
+    name = "cell" + x;
+    curCell = document.getElementById(name);
+    curCell.style.backgroundColor = "lightblue";
+    selectedNum = x;
 }
 
 function generateBoard(grid) {

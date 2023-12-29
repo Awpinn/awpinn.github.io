@@ -38,6 +38,10 @@
             <input type="range" min="200" max="1000" value="400" step="50" class="slider" id="widthRange">
             <h2 id=widthSize></h2>
           </div>
+          <div class="slidecontainer">
+            <input type="range" min="0" max="100" value="50" step="1" class="slider" id="blackPercentage">
+            <h2 id=blackPercent></h2>
+          </div>
         </div>
         <div id="buttons">
           <div>
@@ -72,10 +76,14 @@
       var frameOutput = document.getElementById("frameRate");
       var widthSlider = document.getElementById("widthRange");
       var widthOutput = document.getElementById("widthSize");
+      var percentSlider = document.getElementById("blackPercentage");
+      var percentOutput = document.getElementById("blackPercent");
       frameOutput.innerHTML = frameSlider.value + " fps";
       xframerate = parseInt(frameSlider.value);
       sizeOutput.innerHTML = sizeSlider.value + "x" + sizeSlider.value + " Board";
       widthOutput.innerHTML = "Width: " + widthSlider.value + "px";
+      percentOutput.innerHTML = percentSlider.value + "%";
+      percent = parseInt(percentSlider.value);
       xwidth = parseInt(widthSlider.value);
       SIZE = parseInt(sizeSlider.value);
       BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
@@ -103,6 +111,11 @@
         changeWidth();
         redraw();
       }
+      blackPercentage.oninput = function() {
+        widthOutput.innerHTML = "Width: " + widthSlider.value + "px";
+        percentOutput.innerHTML = percentSlider.value + "%";
+        percent = parseInt(percentSlider.value);
+      }
 
       function addElements() {
         document.getElementById("col").innerHTML = "";
@@ -113,6 +126,7 @@
           inputCol.rows="14";
           inputCol.cols="2";
           inputCol.wrap="hard";
+          inputCol.width=width/SIZE;
           document.getElementById("col").appendChild(inputCol);
           var inputRow = document.createElement('textarea');
           inputRow.id="row"+x;

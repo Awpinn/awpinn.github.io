@@ -3,11 +3,19 @@ let width = 400;
 let distance = width/SIZE;
 let BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
 let finalBoard =  Array(SIZE).fill().map(() => Array(SIZE).fill(0));
+
+// 2D array, each row has a list of the restrictions for that column
 let COLRESTRICTIONS = [];
+
+// 2D array, each row has a list of the restrictions for that row
 let ROWRESTRICTIONS = [];
+
+// 3D array, each row has every possible version of the respective row.
 let ROWLIST = [];
+
+// 3D array, each row has every possible version of the respective column.
 let COLLIST = [];
-let queue = [];
+
 let draggedVar = 1;
 let knownBoard = true;
 let autoX = false;
@@ -19,11 +27,16 @@ let manual = true;
 let done = false;
 let xframerate = 1;
 let xwidth = 500;
+let tryFinishBoard = false;
+let finishBoardRow = 0;
+let finishBoardCol = 0;
+let percent = 50;
 
 function setup() {
   loop();
-  frameRate(xframerate);
+  frameRate(60);
   manual = true;
+  finished = false;
   myCanvas = createCanvas(xwidth, xwidth);
   myCanvas.parent("board")
   document.getElementById("row").style.height = width+"px";
@@ -62,9 +75,14 @@ function changeWidth() {
 }
 
 function finishBoard() {
+  submitRestrictions();
   loop();
+  frameRate(xframerate);
+  tryFinishBoard = true;
+  finished = false;
   ROWLIST = [];
   COLLIST = [];
+  
   for (let row = 0; row < ROWRESTRICTIONS.length; row++) {
     ROWLIST.push(initial_list(ROWRESTRICTIONS[row], SIZE));
   }
@@ -72,25 +90,17 @@ function finishBoard() {
     COLLIST.push(initial_list(COLRESTRICTIONS[col], SIZE));
   }
   manual = false;
-
-  if (ROWLIST.length != 0){
-    if (!manual){
-      while(AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) == 1);
-    }
-  }
-  BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
 }
 
 function randomBoard() {
   BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
   finalBoard = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
-  [ROWRESTRICTIONS, COLRESTRICTIONS, ROWLIST, COLLIST] = validBoard();
+  validBoard();
   while (AIPLAY(SIZE, finalBoard, ROWLIST, COLLIST) == 1);
   console.log(finalBoard);
   knownBoard = true;
   finished = false;
   setup();
-  
 }
 
 function clearBoard() {
@@ -110,6 +120,8 @@ function clearRestrictions() {
   setup();
 }
 
+
+// function to initialize the board with the restrictions entered on the webstie
 function submitRestrictions() {
   manual = true;
   knownBoard = false;
@@ -118,20 +130,29 @@ function submitRestrictions() {
   COLLIST = []
   for (let x = 1; x <= SIZE; x++) {
     let currRowText = document.getElementById('row'+x).value;
-    let currRow = currRowText.split(",")
-    let rowx = [];
-    for (let i = 0; i < currRow.length; i++) {
-      rowx.push(parseInt(currRow[i]));
+    if (currRowText.length == 0) {
+      ROWRESTRICTIONS[x-1] = [0];
+    } else {
+      let currRow = currRowText.split(",")
+      let rowx = [];
+      for (let i = 0; i < currRow.length; i++) {
+        rowx.push(parseInt(currRow[i]));
+      }
+      ROWRESTRICTIONS[x-1] = rowx;
     }
-    ROWRESTRICTIONS[x-1] = rowx;
     let currColText = document.getElementById('col'+x).value;
-    let currCol = currColText.split(",")
-    let colx = [];
-    for (let i = 0; i < currCol.length; i++) {
-      colx.push(parseInt(currCol[i]));
+    if (currColText.length == 0) {
+      COLRESTRICTIONS[x-1] = [0];
+    } else {
+      let currCol = currColText.split(",")
+      let colx = [];
+      for (let i = 0; i < currCol.length; i++) {
+        colx.push(parseInt(currCol[i]));
+      }
+      COLRESTRICTIONS[x-1] = colx;
     }
-    COLRESTRICTIONS[x-1] = colx;
   }
+  
   for (let row = 0; row < ROWRESTRICTIONS.length; row++) {
     ROWLIST.push(initial_list(ROWRESTRICTIONS[row], SIZE));
   }
@@ -140,25 +161,56 @@ function submitRestrictions() {
   }
 }
 
+// function to check if the board has been fully correctly solved
 function checkFinished() {
   result = true;
   if (!knownBoard) {
-    result = false;
+    for (let i = 0; i < SIZE; i++) {
+      for (let j = 0; j < SIZE; j++) {
+        if (BOARD[i][j] == 0) {
+          finished = false;
+          return;
+        }
+      }
+    }
+    finished = true;
     return;
   }
   for (let i = 0; i < SIZE; i++) {
     for (let j = 0; j < SIZE; j++) {
       if (finalBoard[i][j] != BOARD[i][j]) {
-        result = false;
+        finished = false;
         return;
       }
     }
   }
-  finished = result;
+  finished = true;
 }
 
+// p5.js builtin function to draw to the canvas
 function draw() {
-  // fill('white');
+  if (tryFinishBoard && !finished) {
+    if (ROWLIST.length != 0){
+      if (!manual){
+        let x = 0;
+        while (x == 0 && !finished) {
+          if (finishBoardRow != SIZE) {
+            x = AIPLAY(SIZE, BOARD, ROWLIST, COLLIST, finishBoardRow, null)
+            finishBoardRow += 1
+          } else {
+            x = AIPLAY(SIZE, BOARD, ROWLIST, COLLIST, null, finishBoardCol)
+            finishBoardCol += 1
+            if (finishBoardCol == SIZE) {
+              finishBoardRow = 0;
+              finishBoardCol = 0;
+            }
+          }
+          checkFinished();
+        }
+      }
+    }
+    if (finished) frameRate(60);
+  }
   if (autoX) {
     allRows = []
     allCols = []
@@ -207,6 +259,7 @@ function draw() {
   }
   if (!finished) checkFinished();
   if (finished) {
+    // frameRate(60);
     let step = 2;
     if (rgb[0] > 0 && rgb[1] >= 0 && rgb[2] == 0) {
       rgb[0] -= step;
@@ -225,7 +278,6 @@ function draw() {
     for (let col = 0; col < SIZE; col++) {
       if (BOARD[col][row] == 1) {
         if (finished) {
-          // console.log(rgb[0], rgb[1], rgb[2]);
           fill(rgb[0], rgb[1], rgb[2]);
         }
         else if (knownBoard) {
@@ -254,6 +306,7 @@ function draw() {
         line(row*distance, col*distance, row*distance+distance, col*distance+distance);
         line(row*distance+distance, col*distance, row*distance, col*distance+distance);
         stroke('black');
+        strokeWeight(3);
       } else {
         fill('white');
         rect(row*distance, col*distance, distance, distance);
@@ -268,43 +321,9 @@ function draw() {
     line(0, i*distance, width, i*distance);
     strokeWeight(3);
   }
-
-  // done = true;
-
-  // for (let row = 0; row < SIZE; row++) {
-  //   for (let col = 0; col < SIZE; col++) {
-  //     if (BOARD[col][row] == 0) {
-  //       done = false;
-  //     }
-  //   }
-  // }
-
-  // if (done) {
-  //   noLoop();
-  // }
-
-  if (queue.length != 0) {
-    if (ROWLIST.length != 0){
-      if (!manual){
-        let curr = queue.shift();
-        if (curr[0] == 'r') {
-          let row = curr[1];
-          for (let col = 0; col < SIZE; col++) {
-            BOARD[row][col] = curr[2][col];
-          }
-        } else if (curr[0] == 'c') {
-          let col = curr[1];
-          for (let row = 0; row < SIZE; row++) {
-            BOARD[row][col] = curr[2][row];
-          }
-        } else {
-          console.log("uh oh");
-        }
-      }
-    }
-  }
 }
 
+// p5.js inbuilt function called when mouseDragged, sets any square to be either a square or x depending on which mouse key is pressed
 function mouseDragged() {
   if (manual) {
     if (mouseX >= 0 && mouseX <= width && mouseY >=0 && mouseY <= width) {
@@ -313,6 +332,7 @@ function mouseDragged() {
   }
 }
 
+// p5.js inbuilt function called when mouse is pressed, will set it to be a square on an x on the current square depending on which mouse key is pressed
 function mousePressed() {
   if (manual) {
     if (mouseButton === LEFT) {
@@ -338,47 +358,78 @@ function mousePressed() {
   }
 }
 
-function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
-  let changing = false;
+function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST, row=null, col=null) {
   tempAutoX = autoX;
   autoX = false;
-  for (let row = 0; row < SIZE; row++) {
+  let changing = false;
+  if (row != null) {
     let tempRow = [...BOARD[row]];
-    let tempRowList = [...ROWLIST[row]];
     ROWLIST[row] = prune_lines(ROWLIST[row], BOARD[row]);
-    if (!arraysEqual(tempRowList, ROWLIST[row])) {
-      changing = true;
-    }
     let currRow = eliminate_options(ROWLIST[row], SIZE);
     if (currRow.length != SIZE) {
+      console.log("Does this happen?");
       autoX = tempAutoX;
       return -1;
     }
-    if (!arraysEqual(tempRow, currRow)) {
-      queue.push(['r', row, currRow]);
+    for (let col = 0; col < SIZE; col++) {
+      if (BOARD[row][col] != currRow[col]) changing = true;
+      BOARD[row][col] = currRow[col];
     }
-    BOARD[row] = currRow;
-  }
-  for (let col = 0; col < SIZE; col++) {
-    let tempColList = [...COLLIST[col]];
+  } else if (col != null) {
     let tempBoardCol = [];
     for (let row = 0; row < SIZE; row++) {
       tempBoardCol.push(BOARD[row][col]);
     }
     let tempCol = [...tempBoardCol];
     COLLIST[col] = prune_lines(COLLIST[col], tempBoardCol);
-    if (!arraysEqual(tempColList, COLLIST[col])) {
-      changing = true;
-    }
+    console.log(COLLIST[col])
     let currCol = eliminate_options(COLLIST[col], SIZE);
     if (currCol.length != SIZE) {
+      console.log("Does this happen?");
       return -1;
     }
     for (let row = 0; row < SIZE; row++) {
+      if (BOARD[row][col] != currCol[row]) changing = true;
       BOARD[row][col] = currCol[row];
     }
-    if (!arraysEqual(tempCol, currCol)) {
-      queue.push(['c', col, currCol]);
+  } else {
+    for (let row = 0; row < SIZE; row++) {
+      let tempRow = [...BOARD[row]];
+      let tempRowList = [...ROWLIST[row]];
+      ROWLIST[row] = prune_lines(ROWLIST[row], BOARD[row]);
+      if (tempRowList.length != ROWLIST[row].length) {
+        changing = true;
+      }
+      let currRow = eliminate_options(ROWLIST[row], SIZE);
+      if (currRow.length != SIZE) {
+        console.log("Does this happen?");
+        autoX = tempAutoX;
+        return -1;
+      }
+      for (let col = 0; col < SIZE; col++) {
+        BOARD[row][col] = currRow[col];
+      }
+      // BOARD[row] = currRow;
+    }
+    for (let col = 0; col < SIZE; col++) {
+      let tempColList = [...COLLIST[col]];
+      let tempBoardCol = [];
+      for (let row = 0; row < SIZE; row++) {
+        tempBoardCol.push(BOARD[row][col]);
+      }
+      let tempCol = [...tempBoardCol];
+      COLLIST[col] = prune_lines(COLLIST[col], tempBoardCol);
+      if (tempColList.length != COLLIST[col].length) {
+        changing = true;
+      }
+      let currCol = eliminate_options(COLLIST[col], SIZE);
+      if (currCol.length != SIZE) {
+        console.log("Does this happen?");
+        return -1;
+      }
+      for (let row = 0; row < SIZE; row++) {
+        BOARD[row][col] = currCol[row];
+      }
     }
   }
   autoX = tempAutoX;
@@ -387,6 +438,61 @@ function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
   }
   return 1;
 }
+
+// function AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) {
+//   let changing = false;
+//   tempAutoX = autoX;
+//   autoX = false;
+//   for (let row = 0; row < SIZE; row++) {
+//     let tempRow = [...BOARD[row]];
+//     let tempRowList = [...ROWLIST[row]];
+//     ROWLIST[row] = prune_lines(ROWLIST[row], BOARD[row]);
+//     if (!arraysEqual(tempRowList, ROWLIST[row])) {
+//       changing = true;
+//     }
+//     let currRow = eliminate_options(ROWLIST[row], SIZE);
+//     if (currRow.length != SIZE) {
+//       console.log("Does this happen?");
+//       autoX = tempAutoX;
+//       return -1;
+//     }
+//     if (!arraysEqual(tempRow, currRow)) {
+//       queue.push(['r', row, currRow]);
+//     }
+//     for (let col = 0; col < SIZE; col++) {
+//       BOARD[row][col] = currRow[col];
+//     }
+//     // BOARD[row] = currRow;
+//   }
+//   for (let col = 0; col < SIZE; col++) {
+//     let tempColList = [...COLLIST[col]];
+//     let tempBoardCol = [];
+//     for (let row = 0; row < SIZE; row++) {
+//       tempBoardCol.push(BOARD[row][col]);
+//     }
+//     let tempCol = [...tempBoardCol];
+//     COLLIST[col] = prune_lines(COLLIST[col], tempBoardCol);
+//     if (!arraysEqual(tempColList, COLLIST[col])) {
+//       changing = true;
+//     }
+//     let currCol = eliminate_options(COLLIST[col], SIZE);
+//     if (currCol.length != SIZE) {
+//       console.log("Does this happen?");
+//       return -1;
+//     }
+//     for (let row = 0; row < SIZE; row++) {
+//       BOARD[row][col] = currCol[row];
+//     }
+//     if (!arraysEqual(tempCol, currCol)) {
+//       queue.push(['c', col, currCol]);
+//     }
+//   }
+//   autoX = tempAutoX;
+//   if (!changing) {
+//     return 0;
+//   }
+//   return 1;
+// }
 
 function arraysEqual(a, b) {
   if (a === b) return true;
@@ -435,6 +541,9 @@ function initial_list(lineSent, size) {
       for (let j = 1; j < after[i].length; j++) {
         temp.push(after[i][j]);
       }
+      let sum = size;
+      for (let j = 0; j < temp.length; j++) sum -= temp[j];
+      if (sum != 0) temp.push(sum);
       result.push(temp);
     }
     x++;
@@ -443,6 +552,9 @@ function initial_list(lineSent, size) {
 }
 
 function eliminate_options(lines, size) {
+  // should fill in what is implied by the lines list
+  // lines is a row of rowlist or collist which is every possible valid version of the line.
+
   let result = [];
   let parity = -1;
   if (lines.length == 0) {
@@ -474,15 +586,58 @@ function eliminate_options(lines, size) {
 }
 
 function prune_lines(lines, final) {
+  // lines is every valid version of the current row/col
+  // final is what is currently on the board.
+
+  let result = []
+
+  for (let i = 0; i < lines.length; i++) {
+    let curLine = lines[i];
+    let parity = -1;
+    let valid = true;
+    let offset = 0;
+    let remaining = SIZE;
+    for (let j = 0; j < curLine.length && valid; j++) {
+      let curOffset = offset;
+      let curRestriction = curLine[j];
+      remaining -= curLine[j];
+      for (let x = curOffset; x < curRestriction+curOffset && valid; x++) {
+        offset += 1;
+        if (parity == 1 && final[x] == -1) valid = false;
+        if (parity == -1 && final[x] == 1) valid = false;
+      }
+      parity = -parity
+    }
+    let curOffset = offset;
+    for (let j = curOffset; j < remaining+curOffset && valid; j++) {
+      offset += 1;
+      if (parity == 1 && final[j] == -1) valid = false;
+      if (parity == -1 && final[j] == 1) valid = false;
+    }
+    if (valid) result.push(curLine);
+    // if possible, add to result.
+  }
+  if (result.length == 0) {
+    console.log("what?");
+  }
+  // let sum = 0;
+  // for (let i = 0; i < result.length; i++) {
+  //   sum += result[i];
+  // }
+  // if (SIZE - sum > 0) {
+  //   result.push(SIZE - sum);
+  // }
+  return result;
+
   for (let i = 0; i < lines.length; i++) {
     // this code is to buffer the end of the current line to be -1s
     let sum = 0;
-    for (let x = 0; x < lines[i].length; x++) {
-      sum += lines[i][x];
-    }
-    if (final.length - sum != 0) {
-      lines[i].push(final.length - sum);
-    }
+    // for (let x = 0; x < lines[i].length; x++) {
+    //   sum += lines[i][x];
+    // }
+    // if (final.length - sum != 0) {
+    //   lines[i].push(final.length - sum);
+    // }
     // (to here)
     let parity = -1;
     let count = 0;
@@ -512,16 +667,16 @@ function prune_lines(lines, final) {
 }
 
 function initialSetup() {
+  ROWRESTRICTIONS = [];
+  COLRESTRICTIONS = [];
+  ROWLIST = [];
+  COLLIST = [];
   // verified to be correct
   finalBoard = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
-  let ROWRESTRICTIONS = [];
-  let COLRESTRICTIONS = [];
-  let ROWLIST = [];
-  let COLLIST = [];
 
   for (let row = 0; row < SIZE; row++) {
     for (let col = 0; col < SIZE; col++) {
-      let x = round(random());
+      let x = (random() * 100 < percent);
       finalBoard[row][col] = x;
     }
   }
@@ -572,17 +727,12 @@ function initialSetup() {
   for (let col = 0; col < COLRESTRICTIONS.length; col++) {
     COLLIST.push(initial_list(COLRESTRICTIONS[col], SIZE));
   }
-  return [ROWRESTRICTIONS, COLRESTRICTIONS, ROWLIST, COLLIST];
 }
 
 function validBoard() {
-  let ROWRESTRICTIONS = []
-  let COLRESTRICTIONS = []
-  let ROWLIST = []
-  let COLLIST = []
   let valid = false;
   while (!valid) {
-    [ROWRESTRICTIONS, COLRESTRICTIONS, ROWLIST, COLLIST] = initialSetup();
+    initialSetup();
     var tempRowList = [];
     for (var i = 0; i < ROWLIST.length; i++)
         tempRowList[i] = ROWLIST[i].slice();
@@ -595,7 +745,6 @@ function validBoard() {
     }
   }
   BOARD = Array(SIZE).fill().map(() => Array(SIZE).fill(0));
-  return [ROWRESTRICTIONS, COLRESTRICTIONS, ROWLIST, COLLIST];
 }
 
 function boardIsValid(tempRowList, tempColList) {
