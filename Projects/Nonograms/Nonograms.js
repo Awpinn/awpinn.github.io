@@ -75,11 +75,11 @@ function changeWidth() {
 }
 
 function finishBoard() {
+  finished = false;
   submitRestrictions();
   loop();
   frameRate(xframerate);
   tryFinishBoard = true;
-  finished = false;
   ROWLIST = [];
   COLLIST = [];
   
@@ -158,6 +158,10 @@ function submitRestrictions() {
   }
   for (let col = 0; col < COLRESTRICTIONS.length; col++) {
     COLLIST.push(initial_list(COLRESTRICTIONS[col], SIZE));
+  }
+  if (AIPLAY(SIZE, BOARD, ROWLIST, COLLIST) == -1) {
+    console.log("invalid board");
+    finished = True;
   }
 }
 
